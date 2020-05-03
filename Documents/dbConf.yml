@@ -1,0 +1,30 @@
+---
+postgresql_listen_addresses: "*"
+postgresql_max_connections: 300
+postgresql_wal_level: "hot_standby"
+postgresql_hot_standby: "on"
+postgresql_statement_timeout: 60000
+postgresql_log_lock_waits: "on"
+postgresql_log_destination: "csvlog"
+postgresql_log_min_duration_statement: 0
+postgresql_users:
+  - name: app1
+    pass: md5bb0592c05941d14c231da96950c71b60
+    encrypted: yes
+  - name: app2
+    pass: md5bbb1e4d09b64ca54a237727af46cba7c
+    encrypted: yes
+  - name: vagrant
+    pass: root
+  - name: alex
+    pass: root
+ 
+postgresql_databases:
+  - name: app1_db
+    owner: app1 
+  - name: app2_db
+    owner: app2
+  - name: alex
+    owner: vagrant
+postgresql_pg_hba_custom:
+  - {type: "host", database: "all", user: "all", address: "192.168.33.2" }

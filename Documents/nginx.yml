@@ -1,0 +1,30 @@
+---
+- hosts: webservers
+  become: yes
+  become_method: sudo
+  vars:
+    user: www-data
+    worker_processes: 2
+    pid: /run/nginx.pid
+    worker_connections: 768
+  tasks:
+    - name: instalar nginx
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+    - name: verif que nginx este instalado y se ejecuta
+      service: name=nginx state=started
+    - name: escribir el archivo de cfg de nginx
+      template:
+        src: plantillas/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify:
+      - reiniciar nginx
+  handlers:
+    - name: reiniciar nginx
+      service:
+        name: nginx
+        state: restarted
+
+        #SHA256:synKg/F8UcqPP6rVDdnBxjkNqLokY0AKsLqJ9kr8E6o vagrant@ansiblemetropolitana

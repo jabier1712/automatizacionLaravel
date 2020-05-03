@@ -1,0 +1,25 @@
+---
+- hosts: webservers
+  become: yes
+  become_method: sudo
+  vars:
+    carpeta: /var/www/html/laravel/
+    user: vagrant
+  tasks:
+
+    - name: crear proyecto laravel
+      shell: cd /var/www/html/ && composer create-project laravel/laravel laravel 6.0.*
+
+
+    # - name: permiso a log
+    #   shell: cd /var/www/html/jav/storage/logs/ && sudo chmod 777 laravel.log
+
+    # - name: permiso a session
+    #   shell: cd /var/www/html/jav/storage/framework/ && sudo chmod 777 sessions
+
+    # - name: permiso a session
+    #   shell: cd /var/www/html/jav/storage/framework/ && sudo chmod 777 sessions
+
+    - name: levantar proyecto en host 192.168.33.2
+      shell: cd /var/www/html/jav/ && php artisan serve --host=192.168.33.2 --port=9090
+        

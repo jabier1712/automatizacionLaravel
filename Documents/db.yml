@@ -1,0 +1,9 @@
+---
+- hosts: webservers
+  become: yes
+  become_method: sudo
+  vars_files:
+    - dbConf.yml
+  roles: 
+    - role: anxs.postgresql
+

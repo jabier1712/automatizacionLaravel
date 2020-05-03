@@ -1,0 +1,71 @@
+---
+- hosts: webservers
+  # connection: local
+  become: yes
+  become_method: sudo
+  vars:
+    user: vagrant
+    direccion: /var/www/html/javier1/
+    #git_repo: https://github.com/jabier1712/javiPhp
+    git_repo: https://github.com/jabier1712/laravelJavi.git
+  tasks:
+    - name: installing git
+      apt:
+        name: git
+        state: present
+      become: yes
+
+    - name: Crear directorio
+      file:
+        path: "{{ direccion }}"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        recurse: yes
+      become: yes
+
+      # dar permisos al directorio creado
+    - file:
+        path: "{{ direccion }}"
+        mode: 0777
+        state: directory
+      become: yes
+
+    - name: clonar repositorio
+      git:
+        repo: "{{ git_repo }}"
+        version: "{{ gh_branch | default('master') }}"
+        dest: "{{ direccion }}"
+        accept_hostkey: yes
+        force: yes
+
+    # dar permisos al directorio views  Nnraam56IeXWoHlwK8kkGsU26yu0Q5ZRJpn76lLT
+    - file:
+        path: "{{ direccion }}storage/framework/views"
+        mode: 0777
+        state: directory
+      become: yes
+
+    # dar permiso a logs
+    - file:
+        path: "{{ direccion }}storage/logs"
+        mode: 0777
+        state: directory
+      become: yes
+
+    #dar permiso a la session
+    - file:
+        path: "{{ direccion }}storage/framework/sessions"
+        mode: 0777
+        state: directory
+      become: yes
+      
+    - name: copiar archivo de session
+      copy:
+        src: Nnraam56IeXWoHlwK8kkGsU26yu0Q5ZRJpn76lLT
+        dest: "{{ direccion }}storage/framework/sessions/Nnraam56IeXWoHlwK8kkGsU26yu0Q5ZRJpn76lLT"
+        owner: vagrant
+        group: vagrant
+        mode: 0777
+        recurses: yes
+
